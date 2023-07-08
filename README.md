@@ -11,6 +11,8 @@
 
 ![](./pic/table-cols-in-bd.png)
 
+Потестировать сортировку можно запустив [класс Program](https://github.com/gonzobard777/c_sharp_SortCheck/blob/master/ConsoleApp/Program.cs#L10)
+
 ## Варианты реализации
 
 ### 1. Направление сортировки определяется значением перечисления `SortDirection`
