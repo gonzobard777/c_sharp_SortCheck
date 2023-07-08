@@ -28,35 +28,10 @@ public static class Sort2Ext
 
         var methodCallExpression = sortMethod.Body as MethodCallExpression;
         if (methodCallExpression is null)
-            throw new Exception("MethodCallExpression null");
+            throw new Exception("Sort. MethodCallExpression null");
 
         var method = methodCallExpression.Method.GetGenericMethodDefinition();
         var genericSortMethod = method.MakeGenericMethod(typeof(T), prop.Type);
         return (IOrderedQueryable<T>)genericSortMethod.Invoke(query, new object[] { query, sortLambda });
     }
-
-public static IQueryable<T> OrderingHelper<T>(IQueryable<T> source, string propertyName, bool descending, bool anotherLevel)
-{
-    if (!string.IsNullOrEmpty(propertyName))
-        try
-        {
-            ParameterExpression param = Expression.Parameter(typeof(T), string.Empty);
-            MemberExpression property = Expression.PropertyOrField(param, propertyName);
-            LambdaExpression sort = Expression.Lambda(property, param);
-
-            MethodCallExpression call = Expression.Call(
-                typeof(Queryable),
-                (!anotherLevel ? "OrderBy" : "ThenBy") + (descending ? "Descending" : string.Empty),
-                new[] { typeof(T), property.Type },
-                source.Expression,
-                Expression.Quote(sort));
-            return (IQueryable<T>)source.Provider.CreateQuery<T>(call);
-        }
-        catch
-        {
-            return null;
-        }
-
-    return null;
-}
 }

@@ -30,7 +30,7 @@ public static class SortExt
 
         var methodCallExpression = (sortMethod.Body as MethodCallExpression);
         if (methodCallExpression == null)
-            throw new Exception("MethodCallExpression null");
+            throw new Exception("Sort. MethodCallExpression null");
 
         var method = methodCallExpression.Method.GetGenericMethodDefinition();
         var genericSortMethod = method.MakeGenericMethod(typeof(T), prop.Type);
