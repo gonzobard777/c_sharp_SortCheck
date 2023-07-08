@@ -27,7 +27,7 @@
 
 [Ссылка](https://github.com/gonzobard777/c_sharp_SortCheck/blob/master/ConsoleApp/Database/Sort2Ext.cs)
 
-### Поднятие и подключение к БД PostreSQL
+## Поднятие и подключение к БД PostreSQL
 
 1. Установить [докер](https://www.docker.com/)
 2. В корне проекта лежит файл `docker-compose.yaml`
