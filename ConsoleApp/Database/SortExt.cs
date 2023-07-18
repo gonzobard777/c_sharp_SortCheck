@@ -4,11 +4,32 @@ namespace ConsoleApp.Database;
 
 public static class SortExt
 {
+    // public virtual IQueryable<T> SortDefault(IQueryable<T> query) => query.OrderBy(x => x.Id);
+    
+    /// <summary>
+    /// Универсальная сортировка.
+    /// Сортировку по умолчанию надо реализовывать, переопределяя метод BaseService.SortDefault
+    /// </summary>
+    /// <param name="query">Объект запроса.</param>
+    /// <param name="propOrFieldName">Регистронезависимое название поля, по которому надо произвести сортировку.</param>
+    /// <param name="desc">Направление сортировки.</param>
+    /// <returns>Запрос с сортировкой.</returns>
     public static IQueryable<T> AddSorting<T>(this IQueryable<T> query, string propOrFieldName, SortDirection sortDirection)
     {
-        var param = Expression.Parameter(typeof(T));
-        var prop = Expression.PropertyOrField(param, propOrFieldName);
-        var sortLambda = Expression.Lambda(prop, param);
+        Type propType = null;
+        LambdaExpression sortLambda = null;
+        try
+        {
+            var param = Expression.Parameter(typeof(T));
+            var prop = Expression.PropertyOrField(param, propOrFieldName);
+            propType = prop.Type;
+            sortLambda = Expression.Lambda(prop, param);
+        }
+        catch (Exception e)
+        {
+            // при попытке сортировать по несуществующему свойству
+            // return SortDefault(query);
+        }
 
         Expression<Func<IOrderedQueryable<T>>> sortMethod = null;
 
@@ -33,7 +54,7 @@ public static class SortExt
             throw new Exception("Sort. MethodCallExpression null");
 
         var method = methodCallExpression.Method.GetGenericMethodDefinition();
-        var genericSortMethod = method.MakeGenericMethod(typeof(T), prop.Type);
+        var genericSortMethod = method.MakeGenericMethod(typeof(T), propType);
         return (IOrderedQueryable<T>)genericSortMethod.Invoke(query, new object[] { query, sortLambda });
     }
 }
