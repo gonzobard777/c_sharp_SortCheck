@@ -5,7 +5,7 @@ namespace ConsoleApp.Database;
 public static class Sort2Ext
 {
     // public virtual IQueryable<T> SortDefault(IQueryable<T> query) => query.OrderBy(x => x.Id);
-    
+
     /// <summary>
     /// Универсальная сортировка.
     /// Сортировку по умолчанию надо реализовывать, переопределяя метод BaseService.SortDefault
@@ -27,6 +27,9 @@ public static class Sort2Ext
         }
         catch (Exception e)
         {
+            var message = $"Unable to sort by \"{propOrFieldName}\". No property with this name";
+            //TODO Логировать
+
             // при попытке сортировать по несуществующему свойству
             // return SortDefault(query);
         }
